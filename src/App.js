@@ -1,8 +1,13 @@
 import "./App.css";
-import { Nav, Navbar, NavDropdown, Container, Row, Col } from "react-bootstrap";
+import { useState } from "react";
+import { Nav, Navbar, NavDropdown, Container, Row } from "react-bootstrap";
+import data from "./data.js";
+import Card from "./component/Card.jsx";
 
 function App() {
-  //
+  const [shoes, setShoes] = useState(data);
+  console.log(shoes);
+
   return (
     <div className="App">
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -35,30 +40,14 @@ function App() {
 
       <Container>
         <Row>
-          <Col sm>
-            <img
-              src="https://codingapple1.github.io/shop/shoes1.jpg"
-              width="80%"
+          {shoes.map((item) => (
+            <Card
+              key={item.id}
+              imgSrc={item.imgSrc}
+              title={item.title}
+              price={item.price}
             />
-            <h4>상품명</h4>
-            <p>상품설명</p>
-          </Col>
-          <Col sm>
-            <img
-              src="https://codingapple1.github.io/shop/shoes2.jpg"
-              width="80%"
-            />
-            <h4>상품명</h4>
-            <p>상품설명</p>
-          </Col>
-          <Col sm>
-            <img
-              src="https://codingapple1.github.io/shop/shoes3.jpg"
-              width="80%"
-            />
-            <h4>상품명</h4>
-            <p>상품설명</p>
-          </Col>
+          ))}
         </Row>
       </Container>
     </div>
