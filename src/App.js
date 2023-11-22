@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Nav, Navbar, NavDropdown, Container, Row } from "react-bootstrap";
 import data from "./data.js";
 import Card from "./component/Card.jsx";
-import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Detail from "./page/Detail.jsx";
 
 function App() {
