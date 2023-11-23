@@ -1,27 +1,5 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import styled, { css } from "styled-components";
-
-let YellowBtn = styled.button`
-  background: ${(props) => props.bg};
-  color: ${(props) => (props.bg === "blue" ? "white" : "black")};
-  width: ${(props) => props.width || "200px"};
-  padding: 10px;
-
-  // Styled Components에서 제공하는 css 함수를 사용하여 여러개의 css 속성을 묶어서 정의할 수 있다.
-  // primary prop이 존재하는 경우에만 primary로 정의된 스타일이 적용되도록
-  ${(props) =>
-    props.primary &&
-    css`
-      color: white;
-      background: navy;
-      border-color: navy;
-    `}
-`;
-
-let Box = styled.div`
-  background-color: grey;
-  padding: 20px;
-`;
 
 const Detail = ({ shoes }) => {
   const { id } = useParams();
@@ -31,15 +9,27 @@ const Detail = ({ shoes }) => {
     return id == item.id;
   });
 
+  const [showbox, setShowbox] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowbox(false);
+    }, 2000);
+  });
+
+  useEffect(() => {
+    if (isNaN(error)) {
+      alert("숫자만 입력");
+    }
+  }, [error]);
+
   return (
     <div className="container">
-      <Box>
-        <YellowBtn bg="blue" width="150px">
-          150btn
-        </YellowBtn>
-        <YellowBtn bg="yellow">200btn</YellowBtn>
-        <YellowBtn primary>primary</YellowBtn>
-      </Box>
+      {showbox ? (
+        <div className="disappearBox">페이지 방문 후 2초 후 사라지는 박스</div>
+      ) : null}
+      <input onChange={(e) => setError(e.target.value)}></input>
       <div className="row">
         <div className="col-md-6">
           <img src={product.imgSrc} width="100%" alt="productImg" />
