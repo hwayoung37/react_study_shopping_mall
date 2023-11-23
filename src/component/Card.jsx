@@ -1,7 +1,6 @@
 import { Col } from "react-bootstrap";
 
 const Card = ({ imgSrc, title, price }) => {
-  console.log(imgSrc);
   return (
     <div>
       <Col sm>

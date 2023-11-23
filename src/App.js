@@ -5,9 +5,12 @@ import data from "./data.js";
 import Card from "./component/Card.jsx";
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Detail from "./page/Detail.jsx";
+import axios from "axios";
 
 function App() {
   const [shoes, setShoes] = useState(data);
+  console.log(shoes);
+  const [shoesData, setShoesData] = useState([]);
 
   const navigate = useNavigate();
 
@@ -45,6 +48,24 @@ function App() {
         </Container>
       </Navbar>
 
+      <button
+        onClick={() => {
+          axios
+            .get("https://codingapple1.github.io/shop/data2.json")
+            .then((res) => {
+              console.log(res.data);
+              console.log(shoes);
+              let copy = [...shoes, ...res.data];
+              setShoes(copy);
+              console.log(shoes);
+            })
+            .catch(() => {
+              console.log("실패");
+            });
+        }}
+      >
+        버튼
+      </button>
       <Routes>
         <Route
           path="/"
@@ -56,7 +77,21 @@ function App() {
                   {shoes.map((item) => (
                     <Card
                       key={item.id}
-                      imgSrc={item.imgSrc}
+                      imgSrc={`https://codingapple1.github.io/shop/shoes${
+                        item.id + 1
+                      }.jpg`}
+                      title={item.title}
+                      price={item.price}
+                    />
+                  ))}
+                </Row>
+                <Row>
+                  {shoesData.map((item) => (
+                    <Card
+                      key={item.id}
+                      imgSrc={`https://codingapple1.github.io/shop/shoes${
+                        item.id + 1
+                      }.jpg`}
                       title={item.title}
                       price={item.price}
                     />
