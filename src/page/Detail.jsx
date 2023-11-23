@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Nav } from "react-bootstrap";
 
 const Detail = ({ shoes }) => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const Detail = ({ shoes }) => {
 
   const [showbox, setShowbox] = useState(true);
   const [error, setError] = useState(false);
+  const [tap, setTap] = useState(0);
 
   useEffect(() => {
     setTimeout(() => {
@@ -41,8 +43,39 @@ const Detail = ({ shoes }) => {
           <button className="btn btn-danger">주문하기</button>
         </div>
       </div>
+
+      <Nav variant="tabs" defaultActiveKey="link0">
+        <Nav.Item>
+          <Nav.Link eventKey="link0" onClick={() => setTap(0)}>
+            버튼0
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="link1" onClick={() => setTap(1)}>
+            버튼1
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="link2" onClick={() => setTap(2)}>
+            버튼2
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+
+      <TapControl tap={tap} />
     </div>
   );
 };
+
+function TapControl({ tap }) {
+  // if (tap == 0) {
+  //   return <div>내용0</div>;
+  // } else if (tap == 1) {
+  //   return <div>내용1</div>;
+  // } else if (tap == 2) {
+  //   return <div>내용2</div>;
+  // }
+  return [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tap];
+}
 
 export default Detail;
