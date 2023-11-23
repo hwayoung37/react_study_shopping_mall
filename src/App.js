@@ -14,6 +14,13 @@ function App() {
 
   const navigate = useNavigate();
 
+  //post 요청하는 방법
+  axios.post("url", { name: "kim" });
+  //동시에 ajax요청 여러개 보내기
+  Promise.all([axios.get("url"), axios.get("url2")]);
+  //서버와는 원래 문자자료만 주고 받을 수 있다. object/array는 주고 받을 수 없는데 이런 것은 json이라는 문서로 따옴표쳐서 와진다.
+  //axios는 json변환 작업을 자동으로 해줘서 받은 데이터를 출력하면 바로 object/array가 나온다.
+
   return (
     <div className="App">
       <Navbar expand="lg" className="bg-body-tertiary">
