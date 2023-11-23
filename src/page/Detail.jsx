@@ -13,6 +13,13 @@ const Detail = ({ shoes }) => {
   const [showbox, setShowbox] = useState(true);
   const [error, setError] = useState(false);
   const [tap, setTap] = useState(0);
+  const [pagefade, setpageFade] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => setpageFade("end"), 100);
+
+    return setpageFade("");
+  }, [id]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -27,7 +34,7 @@ const Detail = ({ shoes }) => {
   }, [error]);
 
   return (
-    <div className="container">
+    <div className={`container start ${pagefade}`}>
       {showbox ? (
         <div className="disappearBox">페이지 방문 후 2초 후 사라지는 박스</div>
       ) : null}
@@ -68,14 +75,18 @@ const Detail = ({ shoes }) => {
 };
 
 function TapControl({ tap }) {
-  // if (tap == 0) {
-  //   return <div>내용0</div>;
-  // } else if (tap == 1) {
-  //   return <div>내용1</div>;
-  // } else if (tap == 2) {
-  //   return <div>내용2</div>;
-  // }
-  return [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tap];
+  const [fade, setFade] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => setFade("end"), 100);
+
+    return setFade("");
+  }, [tap]);
+  return (
+    <div className={`start ${fade}`}>
+      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tap]}
+    </div>
+  );
 }
 
 export default Detail;
