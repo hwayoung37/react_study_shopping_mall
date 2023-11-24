@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Nav } from "react-bootstrap";
+import { Context1 } from "../App";
 
 const Detail = ({ shoes }) => {
+  const { check } = useContext(Context1);
+
   const { id } = useParams();
   const product = shoes.find((item) => {
     console.log("id: ", typeof id);
@@ -35,6 +38,7 @@ const Detail = ({ shoes }) => {
 
   return (
     <div className={`container start ${pagefade}`}>
+      <div>{check}</div>
       {showbox ? (
         <div className="disappearBox">페이지 방문 후 2초 후 사라지는 박스</div>
       ) : null}
@@ -69,12 +73,12 @@ const Detail = ({ shoes }) => {
         </Nav.Item>
       </Nav>
 
-      <TapControl tap={tap} />
+      <TapControl tap={tap} shoes={shoes} />
     </div>
   );
 };
 
-function TapControl({ tap }) {
+function TapControl({ tap, shoes }) {
   const [fade, setFade] = useState("");
 
   useEffect(() => {
@@ -84,6 +88,7 @@ function TapControl({ tap }) {
   }, [tap]);
   return (
     <div className={`start ${fade}`}>
+      {shoes[0].title}
       {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tap]}
     </div>
   );
