@@ -2,9 +2,15 @@ import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 import { Context1 } from "../App";
+import { changeName, increase } from "./../store/userSlice"; //store의 상태변경함수
+import { addProducts } from "../store"; //store의 상태변경함수
+import { useDispatch, useSelector } from "react-redux";
 
 const Detail = ({ shoes }) => {
   const { check } = useContext(Context1);
+
+  const dispatch = useDispatch();
+  //store.js로 요청보내주는 함수
 
   const { id } = useParams();
   const product = shoes.find((item) => {
@@ -51,7 +57,15 @@ const Detail = ({ shoes }) => {
           <h4 className="pt-5">{product.title}</h4>
           <p>{product.content}</p>
           <p>{product.price}</p>
-          <button className="btn btn-danger">주문하기</button>
+          <button
+            className="btn btn-danger"
+            // onClick={() => addProducts(product)}
+            onClick={() => {
+              dispatch(addProducts(product));
+            }}
+          >
+            주문하기
+          </button>
         </div>
       </div>
 
