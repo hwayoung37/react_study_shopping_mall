@@ -1,13 +1,19 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Nav, Navbar, NavDropdown, Container, Row } from "react-bootstrap";
 import data from "./data.js";
 import Card from "./component/Card.jsx";
 import { Routes, Route, useNavigate, Outlet, Link } from "react-router-dom";
-import Detail from "./page/Detail.jsx";
-import Cart from "./page/Cart.jsx";
+// import Detail from "./page/Detail.jsx";
+// import Cart from "./page/Cart.jsx";
 import axios from "axios";
 import { useQuery } from "react-query";
+
+//현재 렌더링 되지 않는 페이지들은 이렇게 import해오면 해당 컴포넌트를 출력할 때 import해온다
+//첫 페이지 속도를 향상시킬 수 있으나 해당페이지를 들어가려고 하면 좀 시간이 걸림
+//지연시간에 <Suspense>컴포넌트 사용하여 로딩 중일 때 페이지 만들어서 보여주기
+const Detail = lazy(() => import("./page/Detail.jsx"));
+const Cart = lazy(() => import("./page/Cart.jsx"));
 
 export const Context1 = React.createContext();
 
@@ -69,16 +75,17 @@ function App() {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <div className="main-bg"></div>
-                <Container>
-                  <Row>
-                    {shoes.map((item) => (
-                      <Link to={`/detail/${item.id}`}>
+        <Suspense fallback={<div>로딩중</div>}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <div>
+                  <div className="main-bg"></div>
+                  <Container>
+                    <Row>
+                      {shoes.map((item) => (
+                        // <Link to={`/detail/${item.id}`}>
                         <Card
                           key={item.id}
                           imgSrc={`https://codingapple1.github.io/shop/shoes${
@@ -86,25 +93,31 @@ function App() {
                           }.jpg`}
                           title={item.title}
                           price={item.price}
-                          onClick={() => clickHandler(item.id)}
+                          // onClick={() => clickHandler(item.id)}
+                          onClick={() => navigate(`/detail/${item.id}`)}
                         />
-                      </Link>
-                    ))}
-                  </Row>
-                </Container>
-              </div>
-            }
-          />
+                        // </Link>
+                      ))}
+                    </Row>
+                  </Container>
+                </div>
+              }
+            />
 
-          <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
-          <Route path="/cart" element={<Cart />} />
+            <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
 
-          <Route path="/event" element={<Event />}>
-            <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
-            <Route path="two" element={<div>생일기념 쿠폰받기</div>} />
-          </Route>
-          <Route path="*" element={<div>없는페이지 404임</div>} />
-        </Routes>
+            <Route path="/cart" element={<Cart />} />
+
+            <Route path="/event" element={<Event />}>
+              <Route
+                path="one"
+                element={<div>첫 주문시 양배추즙 서비스</div>}
+              />
+              <Route path="two" element={<div>생일기념 쿠폰받기</div>} />
+            </Route>
+            <Route path="*" element={<div>없는페이지 404임</div>} />
+          </Routes>
+        </Suspense>
       </div>
     </Context1.Provider>
   );
