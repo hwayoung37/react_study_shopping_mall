@@ -1,9 +1,9 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Nav, Navbar, NavDropdown, Container, Row } from "react-bootstrap";
 import data from "./data.js";
 import Card from "./component/Card.jsx";
-import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
+import { Routes, Route, useNavigate, Outlet, Link } from "react-router-dom";
 import Detail from "./page/Detail.jsx";
 import Cart from "./page/Cart.jsx";
 import axios from "axios";
@@ -11,13 +11,38 @@ import axios from "axios";
 export const Context1 = React.createContext();
 
 function App() {
+  useEffect(() => {
+    if (!localStorage.getItem("watched"))
+      localStorage.setItem("watched", JSON.stringify([]));
+  }, []);
+  //제일 처음 접속하면 localStorage에 watched라는 key 만들기
+
+  let obj = { name: "kim" };
+  localStorage.setItem("data", JSON.stringify(obj));
+
   const [shoes, setShoes] = useState(data);
-  const [shoesData, setShoesData] = useState([]);
 
   const navigate = useNavigate();
 
   let [check, setCheck] = useState([10, 20, 30]);
 
+  function clickHandler(id) {
+    let watched = localStorage.getItem("watched");
+    // watched = JSON.parse(watched);
+    // if (!watched.includes(id)) {
+    //   // 중복된 ID가 없을 때만 추가
+    //   watched.push(id);
+    //   localStorage.setItem("watched", JSON.stringify(watched));
+    // }
+  }
+
+  let watched = localStorage.getItem("watched");
+  console.log("watched:", watched);
+  let watchedList = JSON.parse(watched);
+  // watchedList = JSON.parse(watched);
+  console.log("watchedList:", watchedList);
+
+  // if (watchedList.includes(id))
   return (
     <Context1.Provider value={{ check, shoes }}>
       <div className="App">
@@ -52,7 +77,12 @@ function App() {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-
+        <div>
+          최근 본 항목:
+          {shoes.map((item) => (
+            <div>{watchedList.pop() == item.id ? item.title : null}</div>
+          ))}
+        </div>
         <Routes>
           <Route
             path="/"
@@ -62,26 +92,17 @@ function App() {
                 <Container>
                   <Row>
                     {shoes.map((item) => (
-                      <Card
-                        key={item.id}
-                        imgSrc={`https://codingapple1.github.io/shop/shoes${
-                          item.id + 1
-                        }.jpg`}
-                        title={item.title}
-                        price={item.price}
-                      />
-                    ))}
-                  </Row>
-                  <Row>
-                    {shoesData.map((item) => (
-                      <Card
-                        key={item.id}
-                        imgSrc={`https://codingapple1.github.io/shop/shoes${
-                          item.id + 1
-                        }.jpg`}
-                        title={item.title}
-                        price={item.price}
-                      />
+                      <Link to={`/detail/${item.id}`}>
+                        <Card
+                          key={item.id}
+                          imgSrc={`https://codingapple1.github.io/shop/shoes${
+                            item.id + 1
+                          }.jpg`}
+                          title={item.title}
+                          price={item.price}
+                          onClick={() => clickHandler(item.id)}
+                        />
+                      </Link>
                     ))}
                   </Row>
                 </Container>

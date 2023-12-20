@@ -14,15 +14,31 @@ const Detail = ({ shoes }) => {
 
   const { id } = useParams();
   const product = shoes.find((item) => {
-    console.log("id: ", typeof id);
-    console.log("shoes.id: ", typeof item.id);
     return id == item.id;
   });
 
-  const [showbox, setShowbox] = useState(true);
+  // const [showbox, setShowbox] = useState(true);
   const [error, setError] = useState(false);
   const [tap, setTap] = useState(0);
   const [pagefade, setpageFade] = useState("");
+
+  // 1. 디테일 페이지에 접속하면
+  // 2. 상품번호 가져와서
+  // 3. localStorage에 우선 array형식으로 보관하고
+  useEffect(() => {
+    console.log(product.id);
+    let watched = localStorage.getItem("watched");
+    watched = JSON.parse(watched);
+    watched.push(product.id);
+    watched = new Set(watched); //중복없는 array
+    watched = Array.from(watched);
+    localStorage.setItem("watched", JSON.stringify(watched));
+    // if (!watched.includes(product.id)) {
+    //   // 중복된 ID가 없을 때만 추가
+    //   watched.push(product.id);
+    //   localStorage.setItem("watched", JSON.stringify(watched));
+    // }
+  }, []);
 
   useEffect(() => {
     setTimeout(() => setpageFade("end"), 100);
@@ -30,11 +46,11 @@ const Detail = ({ shoes }) => {
     return setpageFade("");
   }, [id]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShowbox(false);
-    }, 2000);
-  });
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setShowbox(false);
+  //   }, 2000);
+  // });
 
   useEffect(() => {
     if (isNaN(error)) {
@@ -44,11 +60,11 @@ const Detail = ({ shoes }) => {
 
   return (
     <div className={`container start ${pagefade}`}>
-      <div>{check}</div>
-      {showbox ? (
+      {/* <div>{check}</div> */}
+      {/* {showbox ? (
         <div className="disappearBox">페이지 방문 후 2초 후 사라지는 박스</div>
-      ) : null}
-      <input onChange={(e) => setError(e.target.value)}></input>
+      ) : null} */}
+      {/* <input onChange={(e) => setError(e.target.value)}></input> */}
       <div className="row">
         <div className="col-md-6">
           <img src={product.imgSrc} width="100%" alt="productImg" />
