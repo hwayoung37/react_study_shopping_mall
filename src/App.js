@@ -7,6 +7,7 @@ import { Routes, Route, useNavigate, Outlet, Link } from "react-router-dom";
 import Detail from "./page/Detail.jsx";
 import Cart from "./page/Cart.jsx";
 import axios from "axios";
+import { useQuery } from "react-query";
 
 export const Context1 = React.createContext();
 
@@ -26,23 +27,27 @@ function App() {
 
   let [check, setCheck] = useState([10, 20, 30]);
 
-  function clickHandler(id) {
-    let watched = localStorage.getItem("watched");
-    // watched = JSON.parse(watched);
-    // if (!watched.includes(id)) {
-    //   // 중복된 ID가 없을 때만 추가
-    //   watched.push(id);
-    //   localStorage.setItem("watched", JSON.stringify(watched));
-    // }
-  }
+  function clickHandler(id) {}
 
-  let watched = localStorage.getItem("watched");
-  console.log("watched:", watched);
-  let watchedList = JSON.parse(watched);
-  // watchedList = JSON.parse(watched);
-  console.log("watchedList:", watchedList);
+  let result = useQuery(
+    "작명",
+    () =>
+      axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
+        console.log("요청됨");
+        return a.data;
+      }),
+    { staleTime: 2000 }
+  );
+  // 1. 데이터 패치 성공/실패/로딩 중 상태를 파악하기 쉽다. -> 쌩리액트는 state로 만들어서 코딩해야됨
+  // result.data -> 성공 시 데이터 들어옴
+  // result.isLoading -> 로딩 중일 때 true
+  // result.error -> 에러일때 true
 
-  // if (watchedList.includes(id))
+  // axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
+  //   // a.data;
+  //   console.log(a.data);
+  // });
+
   return (
     <Context1.Provider value={{ check, shoes }}>
       <div className="App">
@@ -56,33 +61,14 @@ function App() {
                   홈
                   {/* <Link to="/">홈</Link>  링크를 사용하면 a태그처럼 파란색으로 변한다 */}
                 </Nav.Link>
-                <Nav.Link onClick={() => navigate("/event")}>
-                  이벤트
-                  {/* <Link to="/detail">상세페이지</Link> */}
-                </Nav.Link>
-                <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">
-                    Another action
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">
-                    Something
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">
-                    Separated link
-                  </NavDropdown.Item>
-                </NavDropdown>
+                <Nav.Link onClick={() => navigate("/event")}>이벤트</Nav.Link>
+              </Nav>
+              <Nav className="ms-auto">
+                {result.isLoading ? "로딩중" : result.data.name}
               </Nav>
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        <div>
-          최근 본 항목:
-          {shoes.map((item) => (
-            <div>{watchedList.pop() == item.id ? item.title : null}</div>
-          ))}
-        </div>
         <Routes>
           <Route
             path="/"
